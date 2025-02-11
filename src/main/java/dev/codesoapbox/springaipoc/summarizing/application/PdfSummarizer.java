@@ -1,4 +1,4 @@
-package dev.codesoapbox.springaipoc.application;
+package dev.codesoapbox.springaipoc.summarizing.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

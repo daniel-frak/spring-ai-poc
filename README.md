@@ -2,13 +2,29 @@
 
 This project is a proof-of-concept for using Spring Boot AI.
 
-It uses Ollama 3 (8B) to summarize PDF documents.
+It uses `llama3.1:8b` as the backing LLM.
 
-![Screenshot](screenshot.png)
+## Functionality
+
+## PDF summarization
+
+The application can be asked to describe the contents of PDF documents.
+
+![PDF summarization screenshot](pdf_summarization_screenshot.png)
+
+## Answering questions about shops (LLM calling Java functions)
+
+As an example of LLMs interacting with Java code, the application can be asked questions about shops stored
+in a `ShopRepository`.
+
+Given a question like `What products does Consoles R Us sell?`, the LLM knows to use `shopRepository.findByName`
+to find all products sold by *Consoles R Us*.
+
+![Shop questions screenshot](shop_questions_screenshot.png)
 
 ## Prerequisites
 
-The Ollama model needs a lot of RAM, so make sure to close any unnecessary applications.
+The AI model needs a lot of RAM, so make sure to close any unnecessary applications.
 
 You will also need an additional ~6GB to download the dependencies (mainly the LLM model).
 
@@ -102,8 +118,8 @@ A version tuned specifically for interpreting documents might yield better resul
 
 ## TODO
 
-- Add screenshot of the application being used
 - The controller should only accept PDF documents
 - Add tests
+- Make Ollama health check wait until a model is pulled
 - Ollama `entrypoint.sh` should wait for Ollama to start instead of sleeping 5 seconds
 - Document size limit should not be allowed to exceed what the LLM can interpret
