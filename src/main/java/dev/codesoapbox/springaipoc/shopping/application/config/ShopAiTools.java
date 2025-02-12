@@ -1,5 +1,6 @@
 package dev.codesoapbox.springaipoc.shopping.application.config;
 
+import dev.codesoapbox.springaipoc.shopping.application.AiShopService;
 import dev.codesoapbox.springaipoc.shopping.application.Shop;
 import dev.codesoapbox.springaipoc.shopping.application.ShopRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +13,13 @@ import java.util.function.Function;
 
 import static java.util.Collections.emptyList;
 
+/**
+ * Warning: Functions will soon be deprecated in favor of @Tools:
+ * https://docs.spring.io/spring-ai/reference/api/tools.html
+ */
 @RequiredArgsConstructor
 @Configuration
-public class ShopAiFunctionConfig {
+public class ShopAiTools {
 
     private final ShopRepository shopRepository;
 
@@ -32,13 +37,13 @@ public class ShopAiFunctionConfig {
     ) {
     }
 
-    @Bean
+    @Bean(name = AiShopService.GET_SHOP_NAMES_TOOL_NAME)
     @Description("Get shop names")
     public Function<Void, GetShopNamesAIResponse> getShopNames() {
         return shopName -> new GetShopNamesAIResponse(shopRepository.getAllShopNames());
     }
 
-    @Bean
+    @Bean(name = AiShopService.GET_SHOP_DETAILS_TOOL_NAME)
     @Description("Get shop details by name")
     public Function<GetShopDetailsAIRequest, GetShopDetailsAIResponse> getShopDetails() {
         return request -> shopRepository.findByName(request.shopName())

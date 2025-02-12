@@ -4,6 +4,9 @@ import org.springframework.ai.chat.client.ChatClient;
 
 public class AiShopService {
 
+    public static final String GET_SHOP_NAMES_TOOL_NAME = "getShopNames";
+    public static final String GET_SHOP_DETAILS_TOOL_NAME = "getShopDetails";
+
     private final ChatClient chatClient;
 
     public AiShopService(ChatClient.Builder chatClientBuilder) {
@@ -15,13 +18,13 @@ public class AiShopService {
                                " that are available to you." +
                                " Provide detailed information about what queries can be made which you can" +
                                " actually reliably answer.")
+                .defaultFunctions(GET_SHOP_NAMES_TOOL_NAME, GET_SHOP_DETAILS_TOOL_NAME)
                 .build();
     }
 
     public String answer(String question) {
         return chatClient.prompt()
                 .user(question)
-                .functions("getShopNames", "getShopDetails")
                 .call()
                 .content();
     }
