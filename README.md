@@ -7,12 +7,14 @@ It uses `llama3.1:8b` as the backing LLM.
 ## Functionality
 
 ## PDF summarization
+### Document processing
 
 The application can be asked to describe the contents of PDF documents.
 
 ![PDF summarization screenshot](pdf_summarization_screenshot.png)
 
-## Answering questions about shops (LLM calling Java functions)
+## Answering questions about shops
+### LLM calling Java functions
 
 As an example of LLMs interacting with Java code, the application can be asked questions about shops stored
 in a `ShopRepository`.
@@ -21,6 +23,17 @@ Given a question like `What products does Consoles R Us sell?`, the LLM knows to
 to find all products sold by *Consoles R Us*.
 
 ![Shop questions screenshot](shop_questions_screenshot.png)
+
+## Answering questions about games in the context of their reviews
+### Retrieval-Augmented Generation with a vector store using an Advisor
+
+The application can be asked questions about games in the context of their reviews, which are stored as documents
+in a vector store.
+
+Given a question like `What game is set in medieval times?`, the LLM will search through the vector store of game
+reviews to find a game which is mentioned to be set in medieval times.
+
+![Game review questions screenshot](game_reviews_screenshot.png)
 
 ## Prerequisites
 
