@@ -82,6 +82,18 @@ the AI model supports (128k tokens for Llama 3 8B), minus the size of the system
 The currently used LLM is not multimodal and therefore can only process text.
 To enable image processing, a model like [LLaVa](https://llava-vl.github.io/) would have to be used.
 
+### Low intelligence
+
+The model used is not intelligent enough to answer complex questions.
+An example is when it's provided with two functions alongside the prompt:
+one to list the names of available shops, and another to retrieve the details of a shop by name. 
+It is unable to infer that it should use both of them in a specific way to come up with an answer.
+Using the prompt for gentle coaxing towards the solution doesn't seem to help.
+At best, it runs the queries with garbage data.
+At worst, it tries to call functions that don't exist.
+
+While bigger models may fare better at this task, this drives up the maintenance cost considerably.
+
 ### Hallucinations
 
 The current generation of LLMs is prone to hallucinations and therefore the generated summaries cannot be trusted
@@ -89,6 +101,8 @@ in a context where their accuracy is paramount.
 
 A relatively tame example of misinterpretation which I came across is the LLM insisting that no information
 about education was provided in the document, when fed a CV where this information was displayed prominently.
+
+Another example is when the LLM tried calling a Java function that does not exist, leading to a runtime exception.
 
 ### Garbage responses
 
@@ -118,6 +132,7 @@ A version tuned specifically for interpreting documents might yield better resul
 
 ## TODO
 
+- Consider using `llama3.3:3B`
 - The controller should only accept PDF documents
 - Add tests
 - Make Ollama health check wait until a model is pulled

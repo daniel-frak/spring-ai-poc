@@ -7,7 +7,7 @@ public class ShopRepository {
 
     private final List<Shop> shops = List.of(
             new Shop(
-                    "Consoles R Us",
+                    "Shop A",
                     List.of(
                             "Devtendo Swerve",
                             "PixelPanic Z",
@@ -15,7 +15,7 @@ public class ShopRepository {
                     )
             ),
             new Shop(
-                    "The Frootbasket",
+                    "Shop B",
                     List.of(
                             "Apple",
                             "Orange",
@@ -24,6 +24,12 @@ public class ShopRepository {
                     )
             )
     );
+
+    public List<String> getAllShopNames() {
+        return shops.stream()
+                .map(Shop::name)
+                .toList();
+    }
 
     public Optional<Shop> findByName(String name) {
         return shops.stream()
