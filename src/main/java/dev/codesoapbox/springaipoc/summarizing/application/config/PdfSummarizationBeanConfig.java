@@ -1,7 +1,7 @@
 package dev.codesoapbox.springaipoc.summarizing.application.config;
 
 import dev.codesoapbox.springaipoc.summarizing.application.PdfSummarizer;
-import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class PdfSummarizationBeanConfig {
 
     @Bean
-    PdfSummarizer pdfSummarizer(ChatModel chatModel) {
-        return new PdfSummarizer(chatModel);
+    PdfSummarizer pdfSummarizer(ChatClient.Builder chatClientBuilder) {
+        return new PdfSummarizer(chatClientBuilder);
     }
 }

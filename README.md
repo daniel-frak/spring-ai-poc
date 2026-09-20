@@ -2,7 +2,7 @@
 
 This project is a proof-of-concept for using Spring Boot AI.
 
-It uses `llama3.1:8b` as the backing LLM.
+It currently uses `llama3.1:8b` as the backing LLM.
 
 ## Functionality
 
@@ -59,7 +59,7 @@ Once the application starts, all endpoints will become available at
 Bear in mind that it can take a very long time for the LLM to generate a response.
 
 [Open WebUI](https://github.com/open-webui/open-webui) is included as an additional dependency and is available
-at [http://localhost:8089] to allow direct prompting of the underlying LLM for debugging purposes.
+at http://localhost:8089 to allow direct prompting of the underlying LLM for debugging purposes.
 
 ## Shortcomings
 
@@ -93,7 +93,6 @@ the AI model supports (128k tokens for Llama 3 8B), minus the size of the system
 ### Images can't be interpreted
 
 The currently used LLM is not multimodal and therefore can only process text.
-To enable image processing, a model like [LLaVa](https://llava-vl.github.io/) would have to be used.
 
 ### Low intelligence
 
@@ -110,7 +109,7 @@ While bigger models may fare better at this task, this drives up the maintenance
 ### Hallucinations
 
 The current generation of LLMs is prone to hallucinations and therefore the generated summaries cannot be trusted
-in a context where their accuracy is paramount.
+in a context where accuracy is necessary.
 
 A relatively tame example of misinterpretation which I came across is the LLM insisting that no information
 about education was provided in the document, when fed a CV where this information was displayed prominently.
@@ -145,9 +144,7 @@ A version tuned specifically for interpreting documents might yield better resul
 
 ## TODO
 
-- Consider using `llama3.3:3B`
 - The controller should only accept PDF documents
 - Add tests
 - Make Ollama health check wait until a model is pulled
-- Ollama `entrypoint.sh` should wait for Ollama to start instead of sleeping 5 seconds
 - Document size limit should not be allowed to exceed what the LLM can interpret

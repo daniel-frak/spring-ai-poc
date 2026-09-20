@@ -1,6 +1,7 @@
 package dev.codesoapbox.springaipoc.shopping.application.config;
 
 import dev.codesoapbox.springaipoc.shopping.application.AiShopService;
+import dev.codesoapbox.springaipoc.shopping.application.ShopAiTools;
 import dev.codesoapbox.springaipoc.shopping.application.ShopRepository;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +16,18 @@ public class ShopBeanConfig {
     }
 
     @Bean
-    AiShopService aiShopService(ChatClient.Builder chatClientBuilder) {
-        return new AiShopService(chatClientBuilder);
+    ShopAiTools shopTools(ShopRepository shopRepository) {
+        return new ShopAiTools(shopRepository);
+    }
+
+    @Bean
+    AiShopService aiShopService(
+            ChatClient.Builder chatClientBuilder,
+            ShopAiTools shopTools) {
+
+        return new AiShopService(
+                chatClientBuilder,
+                shopTools
+        );
     }
 }

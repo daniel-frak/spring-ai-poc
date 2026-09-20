@@ -1,12 +1,10 @@
 package dev.codesoapbox.springaipoc.summarizing.application;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.reader.pdf.PagePdfDocumentReader;
 import org.springframework.core.io.InputStreamResource;
@@ -18,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@RequiredArgsConstructor
 public class PdfSummarizer {
 
     private static final String SYSTEM_PROMPT_TEXT = """
@@ -26,10 +23,14 @@ public class PdfSummarizer {
             You receive the contents of a document as input and answer with a single-sentence description of it.
             """;
 
-    private final ChatModel chatModel;
+    private final ChatClient chatClient;
 
-    public String summarize(MultipartFile cvFile) {
-        try (InputStream inputStream = cvFile.getInputStream()) {
+    public PdfSummarizer(ChatClient.Builder chatClientBuilder) {
+        this.chatClient = chatClientBuilder.build();
+    }
+
+    public String summarize(MultipartFile pdfFile) {
+        try (InputStream inputStream = pdfFile.getInputStream()) {
             String documentText = getDocumentTextContent(inputStream);
             return askAiToSummarize(documentText);
         } catch (IOException e) {
@@ -39,33 +40,53 @@ public class PdfSummarizer {
     }
 
     private String askAiToSummarize(String documentText) {
-        var prompt = new Prompt(List.of(
-                // System message to tell LLM how to behave
-                new SystemMessage(SYSTEM_PROMPT_TEXT),
+        return chatClient.prompt()
+                .messages(
+                        // System message to tell LLM how to behave
+                        SystemMessage.builder()
+                                .text(SYSTEM_PROMPT_TEXT)
+                                .build(),
 
-                // Few-shot prompting to show LLM what responses should look like
-                new UserMessage("Some PDF content"),
-                new AssistantMessage("A water bill for 200 USD addressed to John Doe."),
-                new UserMessage("Some PDF content"),
-                new AssistantMessage(
-                        "A software development book about Test-Driven Development written by Peter Peterson."),
+                        // Few-shot prompting to show LLM what responses should look like
 
-                // The actual content of the document
-                new UserMessage(documentText)
-        ));
-        String answer = chatModel.call(prompt)
-                .getResult().getOutput().getContent();
-        log.info(prompt.toString());
-        return answer;
+                        // Example 1
+                        UserMessage.builder()
+                                .text("Some PDF content")
+                                .build(),
+
+                        AssistantMessage.builder()
+                                .content("A water bill for 200 USD addressed to John Doe.")
+                                .build(),
+
+                        // Example 2
+                        UserMessage.builder()
+                                .text("Some PDF content")
+                                .build(),
+
+                        // The actual content of the document
+                        AssistantMessage.builder()
+                                .content(
+                                        "A software development book about " +
+                                                "Test-Driven Development written by Peter Peterson."
+                                )
+                                .build(),
+
+                        UserMessage.builder()
+                                // Actual document
+                                .text(documentText)
+                                .build()
+                )
+                .call()
+                .content();
     }
 
     private String getDocumentTextContent(InputStream inputStream) {
         var resource = new InputStreamResource(inputStream);
         var reader = new PagePdfDocumentReader(resource);
+
         List<Document> documents = reader.read();
 
         return documents.stream()
-                .filter(Document::isText)
                 .map(Document::getText)
                 .collect(Collectors.joining("\n"));
     }

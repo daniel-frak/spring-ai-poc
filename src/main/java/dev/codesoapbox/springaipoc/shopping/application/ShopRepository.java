@@ -7,7 +7,7 @@ public class ShopRepository {
 
     private final List<Shop> shops = List.of(
             new Shop(
-                    "Shop A",
+                    "Consoles R Us",
                     List.of(
                             "Devtendo Swerve",
                             "PixelPanic Z",
@@ -15,7 +15,7 @@ public class ShopRepository {
                     )
             ),
             new Shop(
-                    "Shop B",
+                    "Grocery Mart",
                     List.of(
                             "Apple",
                             "Orange",
